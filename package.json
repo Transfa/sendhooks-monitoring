@@ -1,8 +1,8 @@
 {
-  "name": "api",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "sendhooks-monitoring",
+  "version": "0.1.0",
+  "description": "The monitoring service for Sendhooks packages",
+  "main": "main.ts",
   "scripts": {
     "dev": "nodemon main.ts | pino-pretty -t 'yyyy-mm-dd HH:MM:ss.l' -i 'hostname,pid'",
     "start": "node dist/main.js",
