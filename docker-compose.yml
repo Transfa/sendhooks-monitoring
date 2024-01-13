@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  
+  mongo:
+    container_name: mongo
+    image: mongo
+    networks: 
+      - sendhooks
+  
+  sendhooks-engine-api:
+    container_name: sendhooks-engine-api
+    build: .
+    networks: 
+      - sendhooks
+    env_file:
+      - ./.env
+    ports:
+      - "5002:5001"
+    depends_on:
+      - mongo
+
+networks:
+  sendhooks:
+  
