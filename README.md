@@ -17,3 +17,4 @@ curl --location --request POST 'http://localhost:5001/api/send' \
   "status": "success",
   "created": "12-02-2022"
 }'
+```

@@ -1,16 +1,15 @@
-version: '3.9'
+version: "3.9"
 services:
-  
   mongo:
     container_name: mongo
     image: mongo
-    networks: 
+    networks:
       - sendhooks
-  
+
   sendhooks-engine-api:
     container_name: sendhooks-engine-api
     build: .
-    networks: 
+    networks:
       - sendhooks
     env_file:
       - ./.env
@@ -21,4 +20,3 @@ services:
 
 networks:
   sendhooks:
-  

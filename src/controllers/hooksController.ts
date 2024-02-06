@@ -16,8 +16,7 @@ export class HookController {
   }
 
   static async findOne(req: Request, res: Response) {
-    const { hookId
-    } = req.params;
+    const { hookId } = req.params;
     try {
       const hook = await HookModel.findById(hookId);
       if (!hook) {
