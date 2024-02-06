@@ -1,5 +1,7 @@
 # Sendhooks Engine API
 
+Developed by @gjivaros
+
 ## API Testing with Curl
 
 Use `curl` to test the API endpoints:
