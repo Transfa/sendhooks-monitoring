@@ -1,6 +1,6 @@
 # Sendhooks Engine API
 
-Developed by @gjivaros
+Created by [@gjivaros](https://github.com/gjivaros)
 
 ## API Testing with Curl
 
