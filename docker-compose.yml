@@ -1,22 +1,26 @@
 version: "3.9"
+
+# Define the services that make up your application so they can be run together in an isolated environment.
 services:
   mongo:
     container_name: mongo
     image: mongo
     networks:
-      - sendhooks
+      - sendhooks  # Connect the MongoDB service to a custom network named 'sendhooks'.
 
+  # Define the main application service (sendhooks-engine-api).
   sendhooks-engine-api:
     container_name: sendhooks-engine-api
     build: .
     networks:
-      - sendhooks
+      - sendhooks  # Connect this service to the 'sendhooks' network to communicate with MongoDB.
     env_file:
-      - ./.env
+      - ./.env  # Load environment variables from a file named .env in the current directory.
     ports:
-      - "5002:5001"
+      - "5002:5001"  # Map port 5002 on the host to port 5001 in the container, making the application accessible.
     depends_on:
       - mongo
 
+# Define networks to be used by the services. Networks enable services to discover and communicate with each other.
 networks:
-  sendhooks:
+  sendhooks:  # Create a custom network named 'sendhooks'. This allows for isolated communication between services defined to use this network.

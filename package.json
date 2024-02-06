@@ -8,7 +8,7 @@
     "start": "node dist/main.js",
     "build": "tsc"
   },
-  "keywords": [],
+  "keywords": ["webhooks", "monitoring", "sendhooks"],
   "author": "",
   "license": "ISC",
   "dependencies": {
