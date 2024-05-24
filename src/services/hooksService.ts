@@ -44,13 +44,14 @@ export const startHooksListener = async () => {
       } else if (streams) {
         // If we successfully read streams, log the raw stream data for debugging
         appLog.debug("streams", streams); // TODO: to remove
-        const [stream] = streams; // Extract the first (and in this case, only) stream from the array
-
+        const [stream] = streams as any[][];
+                
         // Log the detailed information of the stream for debugging
         appLog.debug("streamData", JSON.stringify(stream, null, 2)); // TODO: to remove
-        const [messages] = stream as any; // Extract the messages from the stream
+        const messages = stream[1]; // Extract the messages from the stream
         const [message] = messages; // Extract the first message from the messages array
         const [id, data] = message; // Destructure the message to get its ID and data
+        appLog.debug("stream", messages)
         const hookData = JSON.parse(data[1]); // Parse the message data (assumed to be JSON) into an object
 
         // Log the parsed hook data for debugging
