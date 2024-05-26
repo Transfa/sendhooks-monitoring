@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased] - yyyy-mm-dd
 
 - Add tests for models (#2)
+- Add tests for controllers (#1)
 
 ### Added
 
