@@ -4,6 +4,7 @@ import { HookModel } from "../models/hookModel";
 import { strVal, strValOrUndef } from "@paroi/data-formatters-lib";
 import { appLog } from "../share/app-log";
 import { appConfig } from "../configuration";
+import { parseDateTime } from "../utils/xlib";
 
 const streamName = appConfig.streamName;
 const groupName = "sendhooks-group";
@@ -45,13 +46,13 @@ export const startHooksListener = async () => {
         // If we successfully read streams, log the raw stream data for debugging
         appLog.debug("streams", streams); // TODO: to remove
         const [stream] = streams as any[][];
-                
+
         // Log the detailed information of the stream for debugging
         appLog.debug("streamData", JSON.stringify(stream, null, 2)); // TODO: to remove
         const messages = stream[1]; // Extract the messages from the stream
         const [message] = messages; // Extract the first message from the messages array
         const [id, data] = message; // Destructure the message to get its ID and data
-        appLog.debug("stream", messages)
+        appLog.debug("stream", messages);
         const hookData = JSON.parse(data[1]); // Parse the message data (assumed to be JSON) into an object
 
         // Log the parsed hook data for debugging
@@ -94,9 +95,14 @@ const handleHookCreation = async (id: string, hookData: any): Promise<void> => {
     // The model's create method is passed an object containing the new hook's properties.
     const hook = await HookModel.create({
       id, // Set the hook's ID from the parameter.
+      external_id: strVal(hookData.webhook_id), // Set the hook's external id from the parameter.
+      url: strVal(hookData.url), // Set the hook's url from the parameter.
       status: strVal(hookData.status), // Extract the status from hookData, ensuring it's a string.
-      created: new Date(strVal(hookData.created)).getTime(), // Convert the created date to a timestamp.
+      created: new Date(parseDateTime(hookData.created)).getTime(), // Convert the created date to a timestamp.
       error: strValOrUndef(hookData.error), // Extract the error field, converting it to a string or undefined.
+      delivered: hookData.delivered
+        ? new Date(parseDateTime(hookData.delivered)).getTime()
+        : null, // Convert the delivered date to a timestamp.
     });
 
     // Log the newly created hook object for debugging purposes.
