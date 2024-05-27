@@ -22,13 +22,16 @@ services:
       - mongo
       - redis
 
-  # Define the main application service (sendhooks-engine-api).
-  sendhooks-engine-api:
-    container_name: sendhooks-engine-api
+  # Define the main application service (sendhooks-monitoring).
+  sendhooks-monitoring:
+    container_name: sendhooks-monitoring
     build: .
     env_file:
-      - ./.env.local # Load environment variables from a file named .env in the current directory.
+      - .env.local # Load environment variables from a file named .env in the current directory.
     ports:
-      - "5002:5002" # Map port 5002 on the host to port 5001 in the container, making the application accessible.
+      - "5002:5002"
+      - "3000:3000"
     depends_on:
       - mongo
+      - sendhooks-engine
+      - redis
