@@ -1,13 +1,12 @@
 version: "3.9"
 
-# Define the services that make up your application so they can be run together in an isolated environment.
 services:
   redis:
     container_name: redis
     image: redis:latest
     hostname: redis
     ports:
-      - "6379:6379" # this makes the service available on the localhost via 6379.
+      - "6379:6379"
 
   mongo:
     container_name: mongo
@@ -22,12 +21,13 @@ services:
       - mongo
       - redis
 
-  # Define the main application service (sendhooks-monitoring).
   sendhooks-monitoring:
     container_name: sendhooks-monitoring
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     env_file:
-      - .env.local # Load environment variables from a file named .env in the current directory.
+      - .env.local
     ports:
       - "5002:5002"
       - "3000:3000"

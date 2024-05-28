@@ -1,5 +1,5 @@
-# Stage 1: Build stage for backend
-FROM node:20-alpine as backend-build
+# Stage 1: Set up the backend development environment
+FROM node:16-alpine as backend-dev
 
 # Set the working directory for the backend
 WORKDIR /app/backend
@@ -13,11 +13,8 @@ RUN npm install
 # Copy backend source code
 COPY backend/ .
 
-# Build the NestJS application
-RUN npm run build
-
-# Stage 2: Build stage for dashboard
-FROM node:20-alpine as dashboard-build
+# Stage 2: Set up the dashboard development environment
+FROM node:20-alpine as dashboard-dev
 
 # Set the working directory for the dashboard
 WORKDIR /app/dashboard
@@ -31,26 +28,23 @@ RUN npm install
 # Copy dashboard source code
 COPY dashboard/ .
 
-# Build the Next.js application
-RUN npm run build
-
-# Stage 3: Final stage
+# Final stage: Combine both development environments
 FROM node:20-alpine
 
-# Install Supervisor
+# Install necessary tools
 RUN apk update && \
     apk add supervisor && \
-    mkdir -p /data/db /data/redis /var/log/supervisor
+    mkdir -p /var/log/supervisor
 
 # Set the working directories for backend and dashboard
 WORKDIR /app
 
-# Copy the backend and dashboard build outputs from previous stages
-COPY --from=backend-build /app/backend /app/backend
-COPY --from=dashboard-build /app/dashboard /app/dashboard
+# Copy the backend and dashboard from previous stages
+COPY --from=backend-dev /app/backend /app/backend
+COPY --from=dashboard-dev /app/dashboard /app/dashboard
 
 # Copy Supervisor configuration
-COPY supervisord.conf /etc/supervisord.conf
+COPY supervisord.dev.conf /etc/supervisord.conf
 
 # Copy entrypoint script
 COPY entrypoint.sh /usr/local/bin/
