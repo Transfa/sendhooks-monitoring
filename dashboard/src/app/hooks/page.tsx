@@ -13,6 +13,20 @@ import { DataTable } from "@/app/hooks/data-table";
 
 import capitalize from "lodash/capitalize";
 
+const truncateText = (text: string, maxLength: number, id: string | number) => {
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return (
+    <div>
+      {text.substring(0, maxLength)}...
+      <Link href={`/hooks/${id}`}>
+        <p className="underline text-primary hover:text-blue-950">more</p>
+      </Link>
+    </div>
+  );
+};
+
 export default function HooksListing() {
   const [page, setPage] = useState(1);
   const pageSize = 10; // Items per page
@@ -75,7 +89,7 @@ export default function HooksListing() {
         const [date, time] = formatDate(row.getValue("delivered")).split(" ");
         return (
           <div className="text-center">
-            <div className="pb-4">{date}</div>
+            <div>{date}</div>
             <div>{time}</div>
           </div>
         );
@@ -85,7 +99,9 @@ export default function HooksListing() {
       accessorKey: "error",
       header: "Error",
       cell: ({ row }) => {
-        return row.getValue("error") || "-";
+        const error: string = row.getValue("error") || "-";
+        const id = row.getValue("_id") as string;
+        return truncateText(error, 20, id); // Adjust the maxLength as needed
       },
     },
   ];

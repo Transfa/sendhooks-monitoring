@@ -39,7 +39,7 @@ export default function Page({ params }: { params: { hookId: string } }) {
               <span className="font-semibold">ID</span>
               <span>{data._id}</span>
             </div>
-            <div className="w-full sm:w-1/2 md:w-1/3 flex flex-col space-y-2">
+            <div className="w-full sm:w-1/2 md:w-1/2 flex flex-col space-y-2">
               <span className="font-semibold">URL</span>
               <span className="text-blue-500 underline">{data.url}</span>
             </div>
@@ -61,7 +61,7 @@ export default function Page({ params }: { params: { hookId: string } }) {
             </div>
             {data.error && (
               <div className="w-full flex flex-col space-y-2">
-                <span className="font-semibold text-red-500">Error:</span>
+                <span className="font-semibold">Error details</span>
                 <pre className="bg-gray-100 p-4 rounded border border-gray-300 overflow-auto">
                   {data.error}
                 </pre>
