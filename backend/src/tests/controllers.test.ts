@@ -38,7 +38,7 @@ describe("Hook Controller Tests", () => {
   test("findAll should retrieve empty array when no hooks", async () => {
     const response = await request(app).get("/hooks");
     expect(response.status).toBe(200);
-    expect(response.body).toEqual([]);
+    expect(response.body.data).toEqual([]);
   });
 
   test("findAll should retrieve all hooks", async () => {
@@ -52,8 +52,8 @@ describe("Hook Controller Tests", () => {
 
     const response = await request(app).get("/hooks");
     expect(response.status).toBe(200);
-    expect(response.body.length).toBe(1);
-    expect(response.body[0].id).toBe(hook.id);
+    expect(response.body.data.length).toBe(1);
+    expect(response.body.data[0].id).toBe(hook.id);
   });
 
   test("findOne should return 404 if hook not found", async () => {
