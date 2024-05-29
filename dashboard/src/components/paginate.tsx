@@ -32,7 +32,7 @@ const Paginate = ({
           "...",
           totalPages - 2,
           totalPages - 1,
-          totalPages,
+          totalPages
         );
       } else {
         pageNumbers.push(
@@ -42,7 +42,7 @@ const Paginate = ({
           currentPage,
           currentPage + 1,
           "...",
-          totalPages,
+          totalPages
         );
       }
     }
@@ -83,7 +83,7 @@ const Paginate = ({
                 {page}
               </Button>
             </PaginationItem>
-          ),
+          )
         )}
 
         <PaginationItem>

@@ -46,7 +46,9 @@ export default function HooksListing() {
         const statusIsSuccess = row.getValue("status") === "success";
         return (
           <div
-            className={`text-center ${statusIsSuccess ? "text-green-700" : "text-red-700"}`}
+            className={`text-center ${
+              statusIsSuccess ? "text-green-700" : "text-red-700"
+            }`}
           >
             {capitalize(row.getValue("status"))}
           </div>
@@ -93,16 +95,14 @@ export default function HooksListing() {
   return (
     <SWRProvider>
       <>
-        <div className="container mx-auto py-10">
-          <DataTable
-            columns={columns}
-            data={hooks}
-            meta={meta}
-            page={page}
-            setPage={setPage}
-            pageSize={pageSize}
-          />
-        </div>
+        <DataTable
+          columns={columns}
+          data={hooks}
+          meta={meta}
+          page={page}
+          setPage={setPage}
+          pageSize={pageSize}
+        />
       </>
     </SWRProvider>
   );

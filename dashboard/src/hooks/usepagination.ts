@@ -4,7 +4,7 @@ import { fetcher } from "@/utils";
 const usePaginatedData = (page: number, limit: number) => {
   const { data, error } = useSWR(
     `/hooks/?page=${page}&limit=${limit}`,
-    fetcher,
+    fetcher
   );
 
   return {

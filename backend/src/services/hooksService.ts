@@ -95,11 +95,13 @@ const handleHookCreation = async (id: string, hookData: any): Promise<void> => {
     // The model's create method is passed an object containing the new hook's properties.
     const hook = await HookModel.create({
       id, // Set the hook's ID from the parameter.
-      external_id: strVal(hookData.webhook_id), // Set the hook's external id from the parameter.
+      externalId: strVal(hookData.webhook_id), // Set the hook's external id from the parameter.
       url: strVal(hookData.url), // Set the hook's url from the parameter.
       status: strVal(hookData.status), // Extract the status from hookData, ensuring it's a string.
       created: new Date(parseDateTime(hookData.created)).getTime(), // Convert the created date to a timestamp.
-      error: hookData.error ? strValOrUndef(hookData.error) : null, // Extract the error field, converting it to a string or undefined.
+      error: hookData.delivery_error
+        ? strValOrUndef(hookData.delivery_error)
+        : null, // Extract the error field, converting it to a string or undefined.
       delivered: hookData.delivered
         ? new Date(parseDateTime(hookData.delivered)).getTime()
         : null, // Convert the delivered date to a timestamp.
