@@ -4,10 +4,29 @@ import { appLog } from "../share/app-log";
 import mongoose from "mongoose";
 
 export class HookController {
-  static async findAll(_: Request, res: Response) {
+  static async findAll(req: Request, res: Response) {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit;
+
     try {
-      const hooks = await HookModel.find();
-      return res.json(hooks);
+      const totalItems = await HookModel.countDocuments();
+      const hooks = await HookModel.find()
+        .sort({ created: -1 }) // Order by most recent created date
+        .skip(skip)
+        .limit(limit);
+
+      const totalPages = Math.ceil(totalItems / limit);
+
+      return res.json({
+        data: hooks,
+        meta: {
+          totalItems,
+          totalPages,
+          currentPage: page,
+          itemsPerPage: limit,
+        },
+      });
     } catch (error) {
       appLog.error("Error fetching hooks:", error);
       return res

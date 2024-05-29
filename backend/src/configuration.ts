@@ -5,7 +5,7 @@ dotenv.config();
 
 export const appConfig = {
   thisServer: {
-    port: nbVal(process.env.PORT),
+    port: nbVal(process.env.BACKEND_PORT),
   },
   database: {
     url: strVal(process.env.MONGODB_URI),
@@ -15,4 +15,5 @@ export const appConfig = {
     port: nbVal(process.env.REDIS_PORT),
   },
   streamName: strVal(process.env.STREAM_KEY),
+  allowedOrigins: strVal(process.env.ALLOWED_ORIGINS),
 };

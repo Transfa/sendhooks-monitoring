@@ -62,7 +62,7 @@ describe("Hook Model Tests", () => {
       created: new Date(),
       delivered: new Date(),
       error: "Timeout",
-      external_id: "123abc",
+      externalId: "123abc",
     };
 
     const hook = new HookModel(hookData);
@@ -71,7 +71,7 @@ describe("Hook Model Tests", () => {
     // Assertions
     expect(hook.delivered).toBeDefined();
     expect(hook.error).toBe(hookData.error);
-    expect(hook.external_id).toBe(hookData.external_id);
+    expect(hook.externalId).toBe(hookData.externalId);
   });
 
   // Additional tests can be added here

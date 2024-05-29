@@ -7,7 +7,7 @@ export interface Hook extends Document {
   created: Date;
   delivered?: Date;
   error?: string;
-  external_id?: string;
+  externalId?: string;
 }
 
 const hookSchema = new Schema<Hook>({
@@ -17,7 +17,7 @@ const hookSchema = new Schema<Hook>({
   created: { type: Date, default: Date.now, required: true },
   delivered: { type: Date },
   error: { type: String },
-  external_id: { type: String },
+  externalId: { type: String },
 });
 
 export const HookModel = model<Hook>("Hook", hookSchema);

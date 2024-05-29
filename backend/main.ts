@@ -10,6 +10,8 @@ import { appLog } from "./src/share/app-log";
 
 const app = express();
 
+const cors = require("cors");
+
 async function main() {
   // Connect to MongoDB at the start
   await connectToMongoDB();
@@ -17,7 +19,25 @@ async function main() {
   // Middleware to parse JSON bodies in incoming requests
   app.use(express.json());
 
-  // Setup the routes for the /api/sendhooks/v1 endpoint
+  const allowedOrigins = appConfig.allowedOrigins.split(",");
+
+  // Custom CORS configuration
+  const corsOptions = {
+    origin: (origin: string, callback: any) => {
+      // Check if the origin is in the allowed origins array
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST"],
+  };
+
+  // Enable CORS with custom options
+  app.use(cors(corsOptions));
+
+  // Set up the routes for the /api/sendhooks/v1 endpoint
   app.use("/api/sendhooks/v1", hooksRoutes);
 
   // Initialize the Redis consumer group for processing hooks
