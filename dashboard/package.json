@@ -16,6 +16,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.11",
+    "lodash": "^4.17.21",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
@@ -25,6 +26,7 @@
     "wretch": "^2.8.1"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
