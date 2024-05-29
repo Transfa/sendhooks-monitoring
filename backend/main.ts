@@ -19,18 +19,11 @@ async function main() {
   // Middleware to parse JSON bodies in incoming requests
   app.use(express.json());
 
-  const allowedOrigins = appConfig.allowedOrigins.split(",");
+  // const allowedOrigins = appConfig.allowedOrigins.split(",");
 
   // Custom CORS configuration
   const corsOptions = {
-    origin: (origin: string, callback: any) => {
-      // Check if the origin is in the allowed origins array
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: "*",
     methods: ["GET", "POST"],
   };
 
