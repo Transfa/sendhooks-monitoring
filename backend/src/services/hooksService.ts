@@ -99,7 +99,7 @@ const handleHookCreation = async (id: string, hookData: any): Promise<void> => {
       url: strVal(hookData.url), // Set the hook's url from the parameter.
       status: strVal(hookData.status), // Extract the status from hookData, ensuring it's a string.
       created: new Date(parseDateTime(hookData.created)).getTime(), // Convert the created date to a timestamp.
-      error: strValOrUndef(hookData.error), // Extract the error field, converting it to a string or undefined.
+      error: hookData.error ? strValOrUndef(hookData.error) : null, // Extract the error field, converting it to a string or undefined.
       delivered: hookData.delivered
         ? new Date(parseDateTime(hookData.delivered)).getTime()
         : null, // Convert the delivered date to a timestamp.
