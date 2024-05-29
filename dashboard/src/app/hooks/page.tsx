@@ -27,7 +27,7 @@ const truncateText = (text: string, maxLength: number, id: string | number) => {
   );
 };
 
-export default function HooksListing() {
+export default function Page() {
   const [page, setPage] = useState(1);
   const pageSize = 10; // Items per page
   const {
