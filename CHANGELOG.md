@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] - yyyy-mm-dd
 
+### Added
+
+### Fixed
+
+## [v0.1.1-beta] - 2024-06-01
+
 - Rewrite README (#3)
 
 ### Added
