@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] - yyyy-mm-dd
 
+- Rewrite README (#3)
+
 ### Added
 
 ### Fixed
