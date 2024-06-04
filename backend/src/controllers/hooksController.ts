@@ -9,7 +9,7 @@ export class HookController {
     const limit = parseInt(req.query.limit as string) || 10;
     const skip = (page - 1) * limit;
 
-    const { status, startDate, endDate, externalId, url } = req.query;
+    const { status, startDate, endDate, search } = req.query;
 
     const filter: any = {};
 
@@ -24,12 +24,11 @@ export class HookController {
       };
     }
 
-    if (externalId) {
-      filter.externalId = externalId;
-    }
-
-    if (url) {
-      filter.url = { $regex: url as string, $options: "i" };
+    if (search) {
+      filter.$or = [
+        { externalId: { $regex: search as string, $options: "i" } },
+        { url: { $regex: search as string, $options: "i" } },
+      ];
     }
 
     try {
