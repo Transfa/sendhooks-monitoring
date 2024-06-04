@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { fetcher, formatDate } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Webhook } from "@/types/webhook";
+import Codeblock from "@/components/codeblock";
 
 export default function Page({ params }: { params: { hookId: string } }) {
   const router = useRouter();
@@ -62,9 +63,10 @@ export default function Page({ params }: { params: { hookId: string } }) {
             {data.error && (
               <div className="w-full flex flex-col space-y-2">
                 <span className="font-semibold">Error details</span>
-                <pre className="bg-gray-100 p-4 rounded border border-gray-300 overflow-auto">
-                  {data.error}
-                </pre>
+                {/*<pre className="bg-gray-100 p-4 rounded border border-gray-300 overflow-auto">*/}
+                {/*  {data.error}*/}
+                {/*</pre>*/}
+                <Codeblock code={data.error} />
               </div>
             )}
           </div>
