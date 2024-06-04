@@ -110,16 +110,14 @@ export default function Page() {
   if (isError) return <div>Error loading data</div>;
   return (
     <SWRProvider>
-      <>
-        <DataTable
-          columns={columns}
-          data={hooks}
-          meta={meta}
-          page={page}
-          setPage={setPage}
-          pageSize={pageSize}
-        />
-      </>
+      <DataTable
+        columns={columns}
+        data={hooks}
+        meta={meta}
+        page={page}
+        setPage={setPage}
+        pageSize={pageSize}
+      />
     </SWRProvider>
   );
 }
