@@ -9,9 +9,32 @@ export class HookController {
     const limit = parseInt(req.query.limit as string) || 10;
     const skip = (page - 1) * limit;
 
+    const { status, startDate, endDate, externalId, url } = req.query;
+
+    const filter: any = {};
+
+    if (status) {
+      filter.status = status;
+    }
+
+    if (startDate && endDate) {
+      filter.created = {
+        $gte: new Date(startDate as string),
+        $lte: new Date(endDate as string),
+      };
+    }
+
+    if (externalId) {
+      filter.externalId = externalId;
+    }
+
+    if (url) {
+      filter.url = { $regex: url as string, $options: "i" };
+    }
+
     try {
-      const totalItems = await HookModel.countDocuments();
-      const hooks = await HookModel.find()
+      const totalItems = await HookModel.countDocuments(filter);
+      const hooks = await HookModel.find(filter)
         .sort({ created: -1 }) // Order by most recent created date
         .skip(skip)
         .limit(limit);
