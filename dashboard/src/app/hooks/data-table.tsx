@@ -36,6 +36,7 @@ import { DatePickerWithRange } from "@/components/date-range-picker";
 import { SearchInput } from "@/components/ui/search-input";
 import { Filters } from "@/types/webhook";
 import { Cross1Icon } from "@radix-ui/react-icons";
+import { DatePicker } from "@/components/date-picker";
 
 const AvailableFiltersKey = {
   status: "status",
@@ -151,7 +152,7 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex space-x-4 mb-4 justify-between">
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap gap-4">
           {visibleFilters.includes("search") && (
             <SearchInput
               value={filters?.search}
@@ -185,7 +186,7 @@ export function DataTable<TData, TValue>({
           )}
 
           {visibleFilters.includes("created") && (
-            <DatePickerWithRange
+            <DatePicker
               onRemoveFilter={handleRemoveFilter}
               placeholder={"Filter by creation date"}
               value={{
@@ -213,7 +214,7 @@ export function DataTable<TData, TValue>({
           )}
 
           {visibleFilters.includes("delivered") && (
-            <DatePickerWithRange
+            <DatePicker
               onRemoveFilter={handleRemoveFilter}
               placeholder={"Filter by delivered date"}
               value={{
