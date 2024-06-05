@@ -15,16 +15,6 @@ import {
 import { DateRange } from "react-day-picker";
 import dayjs from "dayjs";
 
-type DatePickerProps = {
-  onRemoveComponent: () => void;
-  onRemoveFilter: (value: string) => void;
-  onDateChange: (value: any) => void;
-  placeholder: string;
-  fromKey: string;
-  toKey: string;
-  value: DateRange | undefined;
-};
-
 export function DatePicker({
   onRemoveComponent,
   onDateChange,

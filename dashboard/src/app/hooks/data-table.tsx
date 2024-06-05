@@ -32,7 +32,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DatePickerWithRange } from "@/components/date-range-picker";
 import { SearchInput } from "@/components/ui/search-input";
 import { Filters } from "@/types/webhook";
 import { Cross1Icon } from "@radix-ui/react-icons";
@@ -147,7 +146,7 @@ export function DataTable<TData, TValue>({
         setVisibleFilters([...visibleFilters, "delivered"]);
       }
     });
-  }, [filters]);
+  }, [filters, visibleFilters]);
 
   return (
     <div>
