@@ -5,7 +5,6 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  getPaginationRowModel,
 } from "@tanstack/react-table";
 
 import {
@@ -18,6 +17,20 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import Paginate from "@/components/paginate";
+import React, { useState } from "react";
+import { Select, SelectContent, SelectItem } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { DatePickerWithRange } from "@/components/date-range-picker";
+import { SearchInput } from "@/components/ui/search-input";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -26,6 +39,22 @@ interface DataTableProps<TData, TValue> {
   meta: any;
   pageSize: number;
   setPage: (value: number) => void;
+  filters: {
+    status?: string;
+    createdStartDate?: string;
+    createdEndDate?: string;
+    deliveredStartDate?: string;
+    deliveredEndDate?: string;
+    search?: string;
+  };
+  setFilters: (filters: {
+    status?: string;
+    createdStartDate?: string;
+    createdEndDate?: string;
+    deliveredStartDate?: string;
+    deliveredEndDate?: string;
+    search?: string;
+  }) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -35,7 +64,11 @@ export function DataTable<TData, TValue>({
   meta,
   pageSize,
   setPage,
+  filters,
+  setFilters,
 }: DataTableProps<TData, TValue>) {
+  const [visibleFilters, setVisibleFilters] = useState<string[]>(["search"]);
+
   const table = useReactTable({
     data,
     columns,
@@ -55,8 +88,117 @@ export function DataTable<TData, TValue>({
     manualPagination: true,
   });
 
+  const handleFilterChange = (e: {
+    target: { name: string; value: string };
+  }) => {
+    const { name, value } = e.target;
+    setFilters({ ...filters, [name]: value });
+  };
+
+  const handleAddFilter = (filterName: string) => {
+    setVisibleFilters((prev) => [...prev, filterName]);
+  };
+
+  const handleRemoveFilter = (filterName: string) => {
+    setVisibleFilters((prev) => prev.filter((name) => name !== filterName));
+    // @ts-ignore
+    setFilters((prevFilters: any) => ({
+      ...prevFilters,
+      [filterName]: "",
+    }));
+  };
+
+  const availableFilters: { name: string; label: string }[] = [
+    { name: "status", label: "Status" },
+    { name: "created", label: "Created" },
+    { name: "delivered", label: "Delivered" },
+  ];
+
   return (
     <div>
+      <div className="flex space-x-4 mb-4 justify-between">
+        <div className="flex flex-wrap space-x-2">
+          {visibleFilters.includes("search") && (
+            <SearchInput
+              value={filters?.search}
+              handleFilterChange={handleFilterChange}
+            />
+          )}
+          {visibleFilters.includes("status") && (
+            <Select
+              name="status"
+              value={filters.status || ""}
+              onValueChange={(value) => {
+                handleFilterChange({
+                  target: { name: "status", value: value },
+                });
+              }}
+            >
+              <SelectContent>
+                <SelectItem value="success">Success</SelectItem>
+                <SelectItem value="failed">Failed</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+
+          {visibleFilters.includes("created") && (
+            <DatePickerWithRange
+            // className={{}}
+            // name={"Created"}
+            // setDate={(date) => {
+            //   handleFilterChange({
+            //     target: {
+            //       name: "createdStartDate",
+            //       value: dayjs(date?.from).format("YYYY-MM-DD HH:mm:ss"),
+            //     },
+            //   });
+            //   handleFilterChange({
+            //     target: {
+            //       name: "createdEndDate",
+            //       value: dayjs(date?.to).format("YYYY-MM-DD HH:mm:ss"),
+            //     },
+            //   });
+            // }}
+            // date={{
+            //   from: filters.createdStartDate
+            //     ? new Date(filters.createdStartDate as string)
+            //     : undefined,
+            //   to: filters.createdEndDate
+            //     ? new Date(filters.createdEndDate as string)
+            //     : undefined,
+            // }}
+            />
+          )}
+
+          {visibleFilters.includes("createdStartDate") && (
+            <Input
+              type="date"
+              name="createdEndDate"
+              value={filters.createdEndDate || ""}
+              onChange={handleFilterChange}
+              className="p-2 border rounded"
+            />
+          )}
+        </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button>Filters</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {availableFilters
+              .filter((filter) => !visibleFilters.includes(filter.name))
+              .map((filter) => (
+                <DropdownMenuItem
+                  key={filter.name}
+                  onClick={() => handleAddFilter(filter.name)}
+                >
+                  {filter.label}
+                </DropdownMenuItem>
+              ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
