@@ -4,14 +4,21 @@ import { SWRProvider } from "@/app/swr-provider";
 import { formatDate } from "@/utils";
 
 import usePaginatedData from "@/hooks/usepagination";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Webhook } from "@/types/webhook";
+import {
+  useRouter,
+  usePathname,
+  useParams,
+  useSearchParams,
+} from "next/navigation";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/app/hooks/data-table";
 
 import capitalize from "lodash/capitalize";
+import { noop } from "lodash";
 
 const truncateText = (text: string, maxLength: number, id: string | number) => {
   if (text.length <= maxLength) {
@@ -28,14 +35,54 @@ const truncateText = (text: string, maxLength: number, id: string | number) => {
 };
 
 export default function Page() {
+  const router = useRouter();
   const [page, setPage] = useState(1);
   const pageSize = 10; // Items per page
+  const params = useParams();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [filters, setFilters] = useState<{
+    status?: string;
+    createdStartDate?: string;
+    createdEndDate?: string;
+    deliveredStartDate?: string;
+    deliveredEndDate?: string;
+    search?: string;
+  }>({
+    status: (params.status as string) || "",
+    createdStartDate: (params.createdStartDate as string) || "",
+    createdEndDate: (params.createdEndDate as string) || "",
+    deliveredStartDate: (params.deliveredStartDate as string) || "",
+    deliveredEndDate: (params.deliveredEndDate as string) || "",
+    search: (params.search as string) || "",
+  });
+
+  useEffect(() => {
+    const cleanedFilterQuery = {};
+
+    Object.keys(filters).map((key) => {
+      // @ts-ignore
+      if (filters[key]) {
+        // @ts-ignore
+        cleanedFilterQuery[key] = filters[key];
+      }
+    });
+    const query = new URLSearchParams({
+      page: page.toString(),
+      limit: pageSize.toString(),
+      ...cleanedFilterQuery,
+    }).toString();
+
+    router.push(`${pathname}?${query}`);
+  }, [page, filters, router, pathname]);
+
   const {
     data: hooks,
     meta,
     isLoading,
     isError,
-  } = usePaginatedData(page, pageSize);
+  } = usePaginatedData(page, pageSize, filters);
 
   const columns: ColumnDef<Webhook>[] = [
     {
@@ -117,6 +164,8 @@ export default function Page() {
         page={page}
         setPage={setPage}
         pageSize={pageSize}
+        filters={filters}
+        setFilters={setFilters}
       />
     </SWRProvider>
   );

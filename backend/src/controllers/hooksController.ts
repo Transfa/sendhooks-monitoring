@@ -9,7 +9,14 @@ export class HookController {
     const limit = parseInt(req.query.limit as string) || 10;
     const skip = (page - 1) * limit;
 
-    const { status, startDate, endDate, search } = req.query;
+    const {
+      status,
+      createdStartDate,
+      createdEndDate,
+      deliveredStartDate,
+      deliveredEndDate,
+      search,
+    } = req.query;
 
     const filter: any = {};
 
@@ -17,10 +24,17 @@ export class HookController {
       filter.status = status;
     }
 
-    if (startDate && endDate) {
+    if (createdStartDate && createdEndDate) {
       filter.created = {
-        $gte: new Date(startDate as string),
-        $lte: new Date(endDate as string),
+        $gte: new Date(createdStartDate as string),
+        $lte: new Date(createdEndDate as string),
+      };
+    }
+
+    if (deliveredStartDate && deliveredEndDate) {
+      filter.delivered = {
+        $gte: new Date(deliveredStartDate as string),
+        $lte: new Date(deliveredEndDate as string),
       };
     }
 
