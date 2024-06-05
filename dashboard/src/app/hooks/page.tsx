@@ -69,6 +69,7 @@ export default function Page() {
           filters[key as keyof Filters];
       }
     });
+
     const query = new URLSearchParams({
       ...cleanedFilterQuery,
     }).toString();
@@ -94,6 +95,7 @@ export default function Page() {
     );
 
     router.push(`${pathname}?${query}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const hooksKey = useCallback(() => {

@@ -1,36 +1,52 @@
 "use client";
 
 import * as React from "react";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { addDays, format } from "date-fns";
+import { CalendarIcon, Cross1Icon } from "@radix-ui/react-icons";
+import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
+import dayjs from "dayjs";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 
 export function DatePickerWithRange({
-  className,
-}: React.HTMLAttributes<HTMLDivElement>) {
+  onRemoveComponent,
+  onDateChange,
+  placeholder,
+  value,
+  fromKey,
+  toKey,
+  onRemoveFilter,
+}: {
+  onRemoveComponent: () => void;
+  onRemoveFilter: (value: string) => void;
+  onDateChange: (value: any) => void;
+  placeholder: string;
+  fromKey: string;
+  toKey: string;
+  value: DateRange | undefined;
+}) {
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+    from: value?.from,
+    to: value?.to,
   });
 
   return (
-    <div className={cn("grid gap-2", className)}>
+    <div className="relative w-[250px]">
       <Popover>
         <PopoverTrigger asChild>
           <Button
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[200x] justify-start text-left font-normal",
+              "w-[250px] justify-start text-left font-normal",
               !date && "text-muted-foreground",
             )}
           >
@@ -42,10 +58,10 @@ export function DatePickerWithRange({
                   {format(date.to, "LLL dd, y")}
                 </>
               ) : (
-                format(date.from, "LLL dd, y")
+                <>{format(date.from, "LLL dd, y")} - </>
               )
             ) : (
-              <span>Pick a date</span>
+              <span>{placeholder}</span>
             )}
           </Button>
         </PopoverTrigger>
@@ -58,8 +74,42 @@ export function DatePickerWithRange({
             onSelect={setDate}
             numberOfMonths={2}
           />
+          <div className="w-full flex justify-end">
+            <PopoverClose
+              className="m-2"
+              onClick={() => {
+                if (date?.from) {
+                  onDateChange({
+                    target: {
+                      name: fromKey,
+                      value: dayjs(date?.from).format("YYYY-MM-DD HH:mm:ss"),
+                    },
+                  });
+                } else {
+                  onRemoveFilter(fromKey);
+                }
+
+                if (date?.to) {
+                  onDateChange({
+                    target: {
+                      name: toKey,
+                      value: dayjs(date?.to).format("YYYY-MM-DD HH:mm:ss"),
+                    },
+                  });
+                } else {
+                  onRemoveFilter(toKey);
+                }
+              }}
+            >
+              <Button>Ok</Button>
+            </PopoverClose>
+          </div>
         </PopoverContent>
       </Popover>
+      <Cross1Icon
+        className="absolute bottom-6 left-60 cursor-pointer border border-black bg-white rounded"
+        onClick={onRemoveComponent}
+      />
     </div>
   );
 }

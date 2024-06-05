@@ -25,7 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 
 import {
   DropdownMenu,
@@ -92,7 +91,6 @@ export function DataTable<TData, TValue>({
     },
     manualPagination: true,
   });
-
   const handleFilterChange = (e: {
     target: { name: string; value: string };
   }) => {
@@ -104,8 +102,15 @@ export function DataTable<TData, TValue>({
     setVisibleFilters((prev) => [...prev, filterName]);
   };
 
-  const handleRemoveFilter = (filterName: string) => {
+  const handleRemoveFilterComponent = (filterName: string) => {
     setVisibleFilters((prev) => prev.filter((name) => name !== filterName));
+    // @ts-ignore
+    setFilters((prevFilters: any) => ({
+      ...prevFilters,
+      [filterName]: "",
+    }));
+  };
+  const handleRemoveFilter = (filterName: string) => {
     // @ts-ignore
     setFilters((prevFilters: any) => ({
       ...prevFilters,
@@ -126,6 +131,19 @@ export function DataTable<TData, TValue>({
         Object.keys(AvailableFiltersKey).includes(key)
       ) {
         setVisibleFilters([...visibleFilters, key]);
+      }
+
+      if (
+        !!filters[key as keyof Filters] &&
+        (key === "createdStartDate" || key === "createdEndDate")
+      ) {
+        setVisibleFilters([...visibleFilters, "created"]);
+      }
+      if (
+        !!filters[key as keyof Filters] &&
+        (key === "deliveredStartDate" || key === "deliveredEndDate")
+      ) {
+        setVisibleFilters([...visibleFilters, "delivered"]);
       }
     });
   }, [filters]);
@@ -161,47 +179,64 @@ export function DataTable<TData, TValue>({
               </Select>
               <Cross1Icon
                 className="absolute bottom-6 left-48 cursor-pointer border border-black bg-white rounded "
-                onClick={() => handleRemoveFilter("status")}
+                onClick={() => handleRemoveFilterComponent("status")}
               />
             </div>
           )}
 
           {visibleFilters.includes("created") && (
             <DatePickerWithRange
-            // className={{}}
-            // name={"Created"}
-            // setDate={(date) => {
-            //   handleFilterChange({
-            //     target: {
-            //       name: "createdStartDate",
-            //       value: dayjs(date?.from).format("YYYY-MM-DD HH:mm:ss"),
-            //     },
-            //   });
-            //   handleFilterChange({
-            //     target: {
-            //       name: "createdEndDate",
-            //       value: dayjs(date?.to).format("YYYY-MM-DD HH:mm:ss"),
-            //     },
-            //   });
-            // }}
-            // date={{
-            //   from: filters.createdStartDate
-            //     ? new Date(filters.createdStartDate as string)
-            //     : undefined,
-            //   to: filters.createdEndDate
-            //     ? new Date(filters.createdEndDate as string)
-            //     : undefined,
-            // }}
+              onRemoveFilter={handleRemoveFilter}
+              placeholder={"Filter by creation date"}
+              value={{
+                from: filters.createdStartDate
+                  ? new Date(filters.createdStartDate as string)
+                  : undefined,
+                to: filters.createdEndDate
+                  ? new Date(filters.createdEndDate as string)
+                  : undefined,
+              }}
+              onRemoveComponent={() => {
+                handleRemoveFilterComponent("createdEndDate");
+                handleRemoveFilterComponent("createdStartDate");
+
+                setVisibleFilters([
+                  ...visibleFilters.filter(
+                    (visibleFilter) => visibleFilter !== "created",
+                  ),
+                ]);
+              }}
+              onDateChange={handleFilterChange}
+              fromKey={"createdStartDate"}
+              toKey={"createdEndDate"}
             />
           )}
 
-          {visibleFilters.includes("createdStartDate") && (
-            <Input
-              type="date"
-              name="createdEndDate"
-              value={filters.createdEndDate || ""}
-              onChange={handleFilterChange}
-              className="p-2 border rounded"
+          {visibleFilters.includes("delivered") && (
+            <DatePickerWithRange
+              onRemoveFilter={handleRemoveFilter}
+              placeholder={"Filter by delivered date"}
+              value={{
+                from: filters.deliveredStartDate
+                  ? new Date(filters.deliveredStartDate as string)
+                  : undefined,
+                to: filters.deliveredEndDate
+                  ? new Date(filters.deliveredEndDate as string)
+                  : undefined,
+              }}
+              onRemoveComponent={() => {
+                handleRemoveFilterComponent("deliveredStartDate");
+                handleRemoveFilterComponent("deliveredEndDate");
+
+                setVisibleFilters([
+                  ...visibleFilters.filter(
+                    (visibleFilter) => visibleFilter !== "delivered",
+                  ),
+                ]);
+              }}
+              onDateChange={handleFilterChange}
+              fromKey={"deliveredStartDate"}
+              toKey={"deliveredEndDate"}
             />
           )}
         </div>
