@@ -8,3 +8,12 @@ export type Webhook = {
   delivered: string;
   error: string;
 };
+
+export type Filters = {
+  status?: string;
+  createdStartDate?: string;
+  createdEndDate?: string;
+  deliveredStartDate?: string;
+  deliveredEndDate?: string;
+  search?: string;
+};

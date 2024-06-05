@@ -17,11 +17,15 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import Paginate from "@/components/paginate";
-import React, { useState } from "react";
-import { Select, SelectContent, SelectItem } from "@/components/ui/select";
+import React, { useEffect, useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 import {
   DropdownMenu,
@@ -31,6 +35,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DatePickerWithRange } from "@/components/date-range-picker";
 import { SearchInput } from "@/components/ui/search-input";
+import { Filters } from "@/types/webhook";
+import { Cross1Icon } from "@radix-ui/react-icons";
+
+const AvailableFiltersKey = {
+  status: "status",
+  created: "created",
+  delivered: "delivered",
+};
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -39,14 +51,7 @@ interface DataTableProps<TData, TValue> {
   meta: any;
   pageSize: number;
   setPage: (value: number) => void;
-  filters: {
-    status?: string;
-    createdStartDate?: string;
-    createdEndDate?: string;
-    deliveredStartDate?: string;
-    deliveredEndDate?: string;
-    search?: string;
-  };
+  filters: Filters;
   setFilters: (filters: {
     status?: string;
     createdStartDate?: string;
@@ -114,10 +119,21 @@ export function DataTable<TData, TValue>({
     { name: "delivered", label: "Delivered" },
   ];
 
+  useEffect(() => {
+    Object.keys(filters).map((key) => {
+      if (
+        !!filters[key as keyof Filters] &&
+        Object.keys(AvailableFiltersKey).includes(key)
+      ) {
+        setVisibleFilters([...visibleFilters, key]);
+      }
+    });
+  }, [filters]);
+
   return (
     <div>
       <div className="flex space-x-4 mb-4 justify-between">
-        <div className="flex flex-wrap space-x-2">
+        <div className="flex space-x-2">
           {visibleFilters.includes("search") && (
             <SearchInput
               value={filters?.search}
@@ -125,20 +141,29 @@ export function DataTable<TData, TValue>({
             />
           )}
           {visibleFilters.includes("status") && (
-            <Select
-              name="status"
-              value={filters.status || ""}
-              onValueChange={(value) => {
-                handleFilterChange({
-                  target: { name: "status", value: value },
-                });
-              }}
-            >
-              <SelectContent>
-                <SelectItem value="success">Success</SelectItem>
-                <SelectItem value="failed">Failed</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="relative w-[200px]">
+              <Select
+                name="status"
+                value={filters.status || ""}
+                onValueChange={(value) => {
+                  handleFilterChange({
+                    target: { name: "status", value: value },
+                  });
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="success">Success</SelectItem>
+                  <SelectItem value="failed">Failed</SelectItem>
+                </SelectContent>
+              </Select>
+              <Cross1Icon
+                className="absolute bottom-6 left-48 cursor-pointer border border-black bg-white rounded "
+                onClick={() => handleRemoveFilter("status")}
+              />
+            </div>
           )}
 
           {visibleFilters.includes("created") && (
@@ -254,7 +279,15 @@ export function DataTable<TData, TValue>({
         <Paginate
           currentPage={page}
           totalPages={meta.totalPages}
-          onPageChange={setPage}
+          onPageChange={(value) => {
+            setPage(value);
+            handleFilterChange({
+              target: {
+                name: "page",
+                value: value.toString(),
+              },
+            });
+          }}
         />
       </div>
     </div>

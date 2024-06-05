@@ -1,12 +1,13 @@
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
+
 import { SWRProvider } from "@/app/swr-provider";
 import { formatDate } from "@/utils";
 
 import usePaginatedData from "@/hooks/usepagination";
-import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Webhook } from "@/types/webhook";
+import { Filters, Webhook } from "@/types/webhook";
 import {
   useRouter,
   usePathname,
@@ -18,7 +19,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/app/hooks/data-table";
 
 import capitalize from "lodash/capitalize";
-import { noop } from "lodash";
+import isEmpty from "lodash/isEmpty";
+import fromPairs from "lodash/fromPairs";
 
 const truncateText = (text: string, maxLength: number, id: string | number) => {
   if (text.length <= maxLength) {
@@ -59,30 +61,49 @@ export default function Page() {
   });
 
   useEffect(() => {
-    const cleanedFilterQuery = {};
+    const cleanedFilterQuery: Filters = {};
 
     Object.keys(filters).map((key) => {
-      // @ts-ignore
-      if (filters[key]) {
-        // @ts-ignore
-        cleanedFilterQuery[key] = filters[key];
+      if (filters[key as keyof Filters]) {
+        cleanedFilterQuery[key as keyof Filters] =
+          filters[key as keyof Filters];
       }
     });
     const query = new URLSearchParams({
-      page: page.toString(),
-      limit: pageSize.toString(),
       ...cleanedFilterQuery,
     }).toString();
 
-    router.push(`${pathname}?${query}`);
-  }, [page, filters, router, pathname]);
+    if (isEmpty(query)) {
+      router.push(`${pathname}`);
+    }
 
-  const {
-    data: hooks,
-    meta,
-    isLoading,
-    isError,
-  } = usePaginatedData(page, pageSize, filters);
+    router.push(`${pathname}?${query}`);
+  }, [filters, router, pathname]);
+
+  useEffect(() => {
+    const query = searchParams.toString();
+
+    setFilters({
+      ...fromPairs([...Array.from(searchParams.entries())]),
+    });
+
+    setPage(
+      searchParams.get("page")
+        ? parseInt(searchParams.get("page") as string)
+        : 1,
+    );
+
+    router.push(`${pathname}?${query}`);
+  }, []);
+
+  const hooksKey = useCallback(() => {
+    if (!searchParams) return `/hooks/`;
+    const query = searchParams.toString();
+
+    return `/hooks/?${query}`;
+  }, [searchParams]);
+
+  const { data: hooks, meta, isLoading, isError } = usePaginatedData(hooksKey);
 
   const columns: ColumnDef<Webhook>[] = [
     {
