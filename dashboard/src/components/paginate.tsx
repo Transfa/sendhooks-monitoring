@@ -32,7 +32,7 @@ const Paginate = ({
           "...",
           totalPages - 2,
           totalPages - 1,
-          totalPages
+          totalPages,
         );
       } else {
         pageNumbers.push(
@@ -42,7 +42,7 @@ const Paginate = ({
           currentPage,
           currentPage + 1,
           "...",
-          totalPages
+          totalPages,
         );
       }
     }
@@ -59,7 +59,7 @@ const Paginate = ({
             variant="outline"
             size="sm"
             onClick={() => onPageChange(currentPage - 1)}
-            disabled={currentPage === 1}
+            disabled={!currentPage || currentPage === 1}
           >
             Previous
           </Button>
@@ -83,7 +83,7 @@ const Paginate = ({
                 {page}
               </Button>
             </PaginationItem>
-          )
+          ),
         )}
 
         <PaginationItem>
@@ -91,7 +91,7 @@ const Paginate = ({
             variant="outline"
             size="sm"
             onClick={() => onPageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            disabled={!currentPage || currentPage === totalPages}
           >
             Next
           </Button>
