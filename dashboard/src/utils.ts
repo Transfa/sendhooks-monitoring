@@ -1,7 +1,9 @@
 import wretch from "wretch";
 import dayjs from "dayjs";
 
-const api = () => wretch("http://localhost:5002/api/sendhooks/v1");
+const API_URL = process.env.API_URL || "http://localhost:5002";
+
+const api = () => wretch(`${API_URL}/api/sendhooks/v1`);
 
 export const fetcher = (url: string): Promise<any> => {
   return api().get(url).json();
