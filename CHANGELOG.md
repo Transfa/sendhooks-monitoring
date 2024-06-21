@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] - yyyy-mm-dd
 
+### Added
+
+### Fixed
+
+## [v0.2.0-beta] - 2024-06-21
+
 - The API URL is not customizable (#18)
 - Users can filter the list of webhooks (#11)
 
