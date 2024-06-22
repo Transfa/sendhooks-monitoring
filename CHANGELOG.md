@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+## [v0.2.1-beta] - 2024-06-22
+
+### Added
+
+### Fixed
+
+- Fix env var loading (#20)
+
 ## [v0.2.0-beta] - 2024-06-21
 
 - The API URL is not customizable (#18)
