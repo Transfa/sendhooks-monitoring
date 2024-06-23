@@ -1,22 +1,23 @@
 import wretch from "wretch";
 import dayjs from "dayjs";
 
-import dotenv from "dotenv";
+// Function to retrieve the API URL
+async function retrieveApiUrl(): Promise<string> {
+  const response = await fetch("api/");
+  const data = await response.json();
+  return data.apiUrl;
+}
 
-dotenv.config();
+// Fetcher function to make API requests
+export const fetcher = async (url: string): Promise<any> => {
+  const apiUrl = await retrieveApiUrl();
+  const api = wretch(`${apiUrl}/api/sendhooks/v1`);
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-const api = () => wretch(`${API_URL}/api/sendhooks/v1`);
-
-export const fetcher = (url: string): Promise<any> => {
-  return api().get(url).json();
+  return api.url(url).get().json();
 };
 
-export const formatDate = (date: string) => {
-  if (!date) {
-    return "-";
-  }
-
+// Function to format dates
+export const formatDate = (date: string): string => {
+  if (!date) return "-";
   return dayjs(date).format("YYYY-MM-DD HH:mm:ss");
 };
