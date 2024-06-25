@@ -11,17 +11,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+
+## [v0.2.4-beta] - 2024-06-25
+
+### Added
+
+### Fixed
+
+- Read Env variables at runtime #20
+
 ## [v0.2.3-beta] - 2024-06-23
 
 ### Fixed
 
-- Fix env var loading (#21)
+- Fix env var loading (#20)
 
 ## [v0.2.2-beta] - 2024-06-23
 
 ### Fixed
 
-- Fix env var loading (#21)
+- Fix env var loading (#20)
 
 ## [v0.2.1-beta] - 2024-06-22
 
