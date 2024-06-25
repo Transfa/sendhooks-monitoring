@@ -1,16 +1,9 @@
 import wretch from "wretch";
 import dayjs from "dayjs";
-
-// Function to retrieve the API URL
-async function retrieveApiUrl(): Promise<string> {
-  const response = await fetch("api/");
-  const data = await response.json();
-  return data.apiUrl;
-}
-
+import { env } from "next-runtime-env";
 // Fetcher function to make API requests
 export const fetcher = async (url: string): Promise<any> => {
-  const apiUrl = await retrieveApiUrl();
+  const apiUrl = env("NEXT_PUBLIC_API_URL");
   const api = wretch(`${apiUrl}/api/sendhooks/v1`);
 
   return api.url(url).get().json();
